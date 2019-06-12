@@ -8,23 +8,22 @@ class Solution {
 public:
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
         sort(nums.begin(), nums.end());
-   vector<vector<int>> result;
-        for(int b = 0; b < (1 << (int)nums.size()); b++){
+        vector<vector<int>> result;
+        for(int i = 0; i < (1 << (int)nums.size()); i++)
+        {
             vector<int> subset;
-            for(int i = 0; i < (int)nums.size(); i++){
-                if(b & (1 << i))
-                 subset.push_back(nums[i]);
-                                                      }
-            int g = 0;
-            for(; g < (int)result.size(); g++)
+            for(int j = 0; j < (int)nums.size(); j++)
             {
-                if(subset == result[g])
-                    break;
+                if(i & (1 << j))
+                {
+                    subset.push_back(nums[j]);
+                }
             }
-            if(g == (int)result.size())
+            if(count(result.begin(), result.end(), subset) == 0)
                 result.push_back(subset);
-                                                        }
+        }
         return result;
+
     }
 };
 int main()
