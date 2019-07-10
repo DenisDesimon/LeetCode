@@ -1,8 +1,7 @@
 //#783 Minimum Distance Between BST Nodes - https://leetcode.com/problems/minimum-distance-between-bst-nodes/
 #include <iostream>
-#include <vector>
 #include <cassert>
-#include <algorithm>
+#include <stack>
 using namespace std;
 
 
@@ -15,51 +14,41 @@ using namespace std;
   };
 
 class Solution {
-    int min_distance = 1e9;
-    vector<int> nodes;
 public:
-    int min_rec(TreeNode* root)
-    {
-        if(root->left != NULL)
-        {
-            min_rec(root->left);
-            auto pos_left = upper_bound(nodes.begin(), nodes.end(), root->left->val);
-            if(pos_left != nodes.end())
-                min_distance = min(min_distance, *pos_left - root->left->val);
-            if(pos_left != nodes.begin())
-                min_distance = min(min_distance, root->left->val - *(pos_left - 1));
-            nodes.insert(pos_left, root->left->val);
-        }
 
-        if(root->right != NULL)
-        {
-            min_rec(root->right);
-            auto pos_right = upper_bound(nodes.begin(), nodes.end(), root->right->val);
-            if(pos_right != nodes.end())
-                min_distance = min(min_distance, *pos_right - root->right->val);
-            if(pos_right != nodes.begin())
-                min_distance = min(min_distance, root->right->val - *(pos_right - 1));
-            nodes.insert(pos_right, root->right->val);
-
-        }
-
-        return min_distance;
-    }
     int minDiffInBST(TreeNode* root) {
-        nodes.push_back(root->val);
-        return min_rec(root);
+        stack<TreeNode*> nodes;
+        int result = INT_MAX;
+        TreeNode* prev = NULL;
+        while(root != NULL || !nodes.empty())
+        {
+            while(root != NULL)
+            {
+                nodes.push(root);
+                root = root->left;
+            }
+            root = nodes.top();
+            nodes.pop();
+            if(prev != NULL)
+            result = min(result, root->val - prev->val);
+            prev = root;
+            root = root->right;
+        }
+        return result;
+
     }
 };
 
 int main()
 {
     Solution solution;
-    TreeNode *given_tree = new TreeNode(27);
-    given_tree->right = new TreeNode(34);
-    given_tree->right->right = new TreeNode(58);
-    given_tree->right->right->left = new TreeNode(50);
-    given_tree->right->right->left->right = new TreeNode(44);
-    int expected_answer = 6;
+    TreeNode *given_tree = new TreeNode(4);
+    given_tree->left = new TreeNode(2);
+    given_tree->right = new TreeNode(6);
+    given_tree->left->left = new TreeNode(1);
+    given_tree->left->right = new TreeNode(3);
+
+    int expected_answer = 1;
     assert(solution.minDiffInBST(given_tree) == expected_answer);
 
     return 0;
