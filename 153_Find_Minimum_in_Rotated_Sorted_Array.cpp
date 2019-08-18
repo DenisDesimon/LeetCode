@@ -23,10 +23,7 @@ public:
             else
             {
                 result = min(result, nums[mid]);
-                if(nums[left] > nums[mid])
-                    right = mid - 1;
-                else
-                    break;
+                right = mid - 1;
             }
         }
         return result;
