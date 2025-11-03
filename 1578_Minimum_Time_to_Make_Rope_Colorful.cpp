@@ -8,21 +8,13 @@ class Solution {
 public:
     int minCost(string colors, vector<int>& neededTime) {
         int result = 0;
-        char previousColor = colors.front();
-        int previousTime = neededTime.front();
         for(int i = 1; i < (int)colors.size(); i++)
         {
-            if(colors[i] == previousColor)
+            if(colors[i] == colors[i - 1])
             {
-                result = result + min(previousTime, neededTime[i]);
-                previousTime = max(previousTime, neededTime[i]);
+                result += min(neededTime[i], neededTime[i - 1]);
+                neededTime[i] = max(neededTime[i], neededTime[i - 1]);
             }
-            else
-            {
-                previousColor = colors[i];
-                previousTime = neededTime[i];
-            }
-
         }
         return result;
     }
@@ -31,15 +23,15 @@ public:
 int main()
 {
     Solution solution;
-    string given_colors = "aabaa";
-    vector<int> given_time = {1, 2, 3, 4, 1};
-    int expected_answer = 2;
-    assert(solution.minCost(given_colors, given_time) == expected_answer);
+    string givenColors = "aabaa";
+    vector<int> givenTime = {1, 2, 3, 4, 1};
+    int expectedAnswer = 2;
+    assert(solution.minCost(givenColors, givenTime) == expectedAnswer);
 
-    given_colors = "abaac";
-    given_time = {1, 2, 3, 4, 5};
-    expected_answer = 3;
-    assert(solution.minCost(given_colors, given_time) == expected_answer);
+    givenColors = "abaac";
+    givenTime = {1, 2, 3, 4, 5};
+    expectedAnswer = 3;
+    assert(solution.minCost(givenColors, givenTime) == expectedAnswer);
 
     return 0;
 }
